@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <script type="text/javascript">
+  function kBar_if(){
+        var num = document.getElementById("num").value;
+        var n  = num.toString();
+<!--        var start_date = document.getElementById("sd").value;-->
+<!--        var end_date = document.getElementById("ed").value;-->
+<!--        var file_url = 'static/' + n + '/' + n + '_' + start_date + 'to' + end_date + '.html';-->
+        var kBar_iframe = document.getElementById("kBar_iframe");
+        var file_url = "static/" + num + "/" + num + "_2020to2021_kBar_Ma.html";
+        kBar_iframe.src = file_url;
+        alert( file_url);
+        var MACD_OSC = document.getElementById("MACD_OSC");
+        var MACD_url = "static/" + num + "/" + num + "_2020to2021_MACD_OSC.html";
+        MACD_OSC.src = MACD_url;
+        alert(MACD_url);
+        var stock_data = document.getElementById("data_iframe");
+        var data_url = "static/" + num + "/" + num + "_20210901.html";
+        stock_data.src = data_url;
+        alert(data_url);
+        }
+  </script>
+</head>
+<body>
+    <iframe id="group" width="1500" height="1200" src="static/semiconductor.html"></iframe>
+        <iframe id="taiex" width=80% height="600" src="static/TAIEX/2020to2021.html"></iframe>
+        <hr>
+        <br>
+
+ 輸入代碼 <input type="text" name="number" id="num" />
+        <input type="button" value="Click" onclick="kBar_if()" />
+        <br>
+        <iframe id="data_iframe" width="800" height="600"></iframe>
+        <br>
+        <iframe id="kBar_iframe" width=80% height="600"></iframe>
+        <iframe id="MACD_OSC" width=80% height="600"></iframe>
+</body>
+</html>
