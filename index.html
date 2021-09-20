@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
   <script type="text/javascript">
-  function kBar_if(){
+      function kBar_if(){
         var num = document.getElementById("num").value;
         var n  = num.toString();
 <!--        var start_date = document.getElementById("sd").value;-->
@@ -19,19 +19,38 @@
         var stock_data = document.getElementById("data_iframe");
         var data_url = "static/" + num + "/" + num + "_20210901.html";
         stock_data.src = data_url;
+        var analysis = document.getElementById("analysis");
+        var analysis_url = 'analysis.html';
+        analysis.src = analysis_url;
         }
+     function show(){
+        var date = new Date();
+        var now = "";
+        now = date.getFullYear()+"年";
+        now = now + (date.getMonth()+1)+"月";
+        now = now + date.getDate()+"日";
+        now = now + date.getHours()+"时";
+        now = now + date.getMinutes()+"分";
+        now = now + date.getSeconds()+"秒";
+        document.getElementById("nowDiv").innerHTML = now;
+        setTimeout("show()",1000);
+        }
+
   </script>
 </head>
-<body>
-    <iframe id="group" width="1500" height="1200" src="static/semiconductor.html"></iframe>
-        <iframe id="taiex" width=80% height="600" src="static/TAIEX/2020to2021.html"></iframe>
+<body onload="show()">
+    <h3>台灣證券交易所-半導體產業(以21支股票為例)</h3>
+    <div id="nowDiv"></div>
+    <iframe id="group" width="1300" height="700" src="static/semiconductor.html"></iframe>
+        <iframe id="taiex" width=80% height="600" src="static/TAIEX/2020to2021_eng_KBar_Ma.html"></iframe>
         <hr>
         <br>
 
- 輸入代碼 <input type="text" name="number" id="num" />
+ 請輸入證券代碼 <input type="text" name="number" id="num" />
         <input type="button" value="Click" onclick="kBar_if()" />
         <br>
-        <iframe id="data_iframe" width="800" height="600"></iframe>
+        <iframe id="data_iframe" width="725" height="600"></iframe>
+        <iframe id="analysis" width="725" height="600"></iframe>
         <br>
         <iframe id="kBar_iframe" width=80% height="600"></iframe>
         <iframe id="MACD_OSC" width=80% height="600"></iframe>
