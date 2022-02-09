@@ -6,7 +6,7 @@ import requests
 import datetime
 import os
 import sqlalchemy
-import plotly_express as px
+
 import plotly
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -64,7 +64,7 @@ def stockDate_tocsv(code): #產生個股月份資訊
 
 def auto_to_csv(code):#自動抓取全部表格
     datetime.date.today()
-    for year in range(2020, 2022): #抓取近三年的資料
+    for year in range(2020, 2022+1): #抓取近三年的資料
         for month in range(1, 13):
             if month < 10:
                 date = str(year)+'0'+str(month) + '01' #因為必須輸入日期, 一次顯示一整個月, 所以幾日先都設定01號
@@ -74,9 +74,11 @@ def auto_to_csv(code):#自動抓取全部表格
                        str(code) + '/' + str(code) + '_' + str(date) + ".csv"
             folderpath = r"C:\Users\user\PycharmProjects\pythonProject\stockproject\static" + '/' + str(code)
 
-            if os.path.isfile(filepath) == True:
-                createDate_tocsv(date, code)
-                time.sleep(5)
+            if os.path.exists(filepath) == True:
+                pass
+                # createDate_tocsv(date, code)
+                # time.sleep(5)
+                # print('{}的{}創建完成'.format(code, date))
             else:
                 if os.path.isdir(folderpath) == True:
                     i = datetime.date.today()
@@ -85,10 +87,12 @@ def auto_to_csv(code):#自動抓取全部表格
                         break
                     else:
                         createDate_tocsv(date, code)
+                        print('{}的{}創建完成'.format(code, date))
                         time.sleep(5)
                 else:
                     os.makedirs(folderpath)
                     createDate_tocsv(date, code)
+                    print('{}的{}創建完成'.format(code, date))
                     time.sleep(5)
             time.sleep(10)
 
@@ -127,13 +131,13 @@ def get_stock_group(): #抓取各業界當日成交資訊 (group)
     resp = requests.get(url, headers=headers)
     resp.encoding = 'utf-8'
     driver.get(url)
-    ele_select = driver.find_element_by_xpath('//*[@id="main-form"]/div/div/form/select/option[36]') #分類項目選單
+    ele_select = driver.find_element('//*[@id="main-form"]/div/div/form/select/option[36]') #分類項目選單
     ele_select.click()
-    button = driver.find_element_by_xpath('//*[@id="main-form"]/div/div/form/a') #查詢按鈕
+    button = driver.find_element('//*[@id="main-form"]/div/div/form/a') #查詢按鈕
     button.click()
     time.sleep(5)
     new_html = driver.page_source
-    page_button = driver.find_element_by_xpath('//*[@id="report-table1_length"]/label/select/option[5]') #每頁幾筆選單
+    page_button = driver.find_element('//*[@id="report-table1_length"]/label/select/option[5]') #每頁幾筆選單
     page_button.click()
     time.sleep(5)
     totalPage_html = driver.page_source
@@ -189,12 +193,12 @@ def all_engData_tocsv(filename):  #計算均線等數據並建立新的欄位
 
 def df_sql(filepath): #將資料寫進資料庫
     df = pd.read_csv(filepath)
-    mydb = mysql.connector.connect(host='localhost', user='root', passwd='root', database='stockdata')
+    mydb = mysql.connector.connect(host='localhost', user='root', passwd='123456789', database='stockdata')
     mycursor = mydb.cursor()
     sql_delete = ("DROP TABLE IF EXISTS `%s`")
     sql_delete = sql_delete.format('stock_'+filepath[7:11])
     mycursor.execute(sql_delete)
-    engine = sqlalchemy.create_engine('mysql+pymysql://root:root@localhost:3306/stockdata')
+    engine = sqlalchemy.create_engine('mysql+pymysql://root:123456789@localhost:3306/stockdata')
     # df.to_sql(filepath[7:-8], con=engine, if_exists='replace', index=False)
     df = df.replace([np.inf, -np.inf], np.nan)
     df.to_sql('stock_' + filepath[7:11], con=engine, if_exists='replace', index=False)
@@ -260,6 +264,7 @@ def TAIEX(date): #產生加權指數
     #自動抓取csv檔案
 
     url = 'https://www.twse.com.tw/indicesReport/MI_5MINS_HIST?response=csv&date=' + str(date)
+    url = url.replace(" ", "%20")
     webpage = urllib.request.urlopen(url)
     data = csv.reader(webpage.read().decode('cp950').splitlines())
     time.sleep(10)
@@ -609,16 +614,19 @@ def percent_Analytics():
 # percent_Analytics()
 
 # change_percent('static/2330/2330_2020to2021_eng.csv')
+
+# get_stock_group()
+
 df = pd.read_csv('static/semiconductor_eng.csv')
 code_list = df['Security Code'].tolist()
-# cross_data()
-percent_Analytics()
+# # cross_data()
+# percent_Analytics()
 
 #自動更新順序
-# for l in range(0, 1):
-#     code = code_list[l]
-#     filename = 'static/{}/{}_2020to2021.csv'.format(code, code)
-#     filepath = 'static/{}/{}_2020to2021_eng.csv'.format(code, code)
+for l in range(0, len(code_list)):
+    code = code_list[l]
+    filename = 'static/{}/{}_2020to2021.csv'.format(code, code)
+    filepath = 'static/{}/{}_2020to2021_eng.csv'.format(code, code)
     # stockDate_tocsv(code) #更新最新月份
     # auto_to_csv(code) #自動抓取多月份資料
     # df_Merge(code) #合併成統一表格 (中文)
@@ -627,8 +635,10 @@ percent_Analytics()
     # kBar_MA(filepath) #k棒+均線圖
     # MACD_OSC(filepath) #背離率
 #加權指數
-# TAIEX(date) #產生加權指數 (個月份)
+# TAIEX(data) #產生加權指數 (個月份)
 # TAIEX_merge() #合併
-# all_TAIEXengData_tocsv(filename) #k棒+均線圖
 # kBar_MA(filename) #k棒+均線圖
-# MACD_OSC(filepath)
+# all_TAIEXengData_tocsv('static/TAIEX/2020to2021.csv') #k棒+均線圖
+
+# MACD_OSC('static/TAIEX/2020to2021_eng.csv')
+kBar_MA('static/TAIEX/2020to2021_eng.csv') #k棒+均線圖

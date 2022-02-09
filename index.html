@@ -17,7 +17,7 @@
         var MACD_url = "static/" + num + "/" + num + "_2020to2021_MACD_OSC.html";
         MACD_OSC.src = MACD_url;
         var stock_data = document.getElementById("data_iframe");
-        var data_url = "static/" + num + "/" + num + "_20210901.html";
+        var data_url = "static/" + num + "/" + num + "_20211201.html";
         stock_data.src = data_url;
         var analysis = document.getElementById("analysis");
         var analysis_url = 'analysis.html';
@@ -42,15 +42,15 @@
     <h3>台灣證券交易所-半導體產業(以21支股票為例)</h3>
     <div id="nowDiv"></div>
     <iframe id="group" width="1300" height="700" src="static/semiconductor.html"></iframe>
-    <iframe id="taiex" width=80% height="600" src="static/TAIEX/2020to2021eng_kbarma.html"></iframe>
-    <iframe id="macd" width="80%" height="600" src="static/TAIEX/2020to2021eng_macdosc.html"></iframe>
+    <iframe id="taiex" width=80% height="600" src="static/TAIEX/2020to2021_eng_kBar_Ma.html"></iframe>
+    <iframe id="macd" width="80%" height="600" src="static/TAIEX/2020to2021_eng_MACD_OSC.html"></iframe>
         <hr>
         <br>
 
  請輸入證券代碼 <input type="text" name="number" id="num" />
         <input type="button" value="Click" onclick="kBar_if()" />
         <br>
-        <iframe id="data_iframe" width="725" height="600"></iframe>
+        <iframe id="data_iframe"  width="725" height="600"></iframe>
         <iframe id="analysis" width="725" height="600"></iframe>
         <br>
         <iframe id="kBar_iframe" width=80% height="600"></iframe>
